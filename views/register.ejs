@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+
+<div class="container">
+  <div class="card">
+    <h2>Create Account</h2>
+
+    <form action="/register" method="post">
+      <div class="input-group">
+        <input type="text" name="username" required>
+        <label>Username</label>
+      </div>
+
+      <div class="input-group">
+        <input type="email" name="email" required>
+        <label>Email</label>
+      </div>
+
+      <div class="input-group">
+          <input type="date" name="DOB" required>
+          <label>DOB</label>
+      </div>
+      <div class="gender">
+          <label>Choose Gender</label>
+        <label><br><input type="radio" name="gender" value="male"> Male</label>
+        <label> <br><input type="radio" name="gender" value="female"> Female</label>
+      </div>
+
+      <div class="input-group">
+        <input type="password" name="password" required>
+        <label>Password</label>
+      </div>
+
+      <button type="submit">Sign Up</button>
+
+      <p class="link">Already have an account? <a href="/signin">Login</a></p>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+<%- include('partials/footer')%>

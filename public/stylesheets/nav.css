@@ -1,0 +1,31 @@
+.navbar{
+  position: fixed;
+  top: 0;  
+  height: 2.5vw;
+  width: 100%;
+  padding: 1.5vw 3vw;
+  background-color: rgb(67, 67, 67);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+.logo{
+    font-size: 1.8vw;
+    font-weight: bold;
+    padding-left:1.5vw;
+}
+.nav-links a{
+    margin-left: 1.5vw;
+    text-decoration: none;
+    color: #ffff;
+    transition: 0.4s;
+    font-weight: semi-bold;
+}
+.nav-links a:hover{
+    color: rgb(143, 185, 221);
+}
+
+.navright{
+    padding-right: 2vw;
+}

@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/stylesheets/profile.css">
+<%- include('partials/nav') %>
+
+<h1>Dashboard</h1> <br>
+<% newuser.forEach((user)=>{ %>
+    <h2>Welcome <%= user.username %> 👋👋 </h2> <br>
+<% })%>
+<h3>This Is Your Dashboard</h3>
+ 
+<%- include('partials/footer')%>
