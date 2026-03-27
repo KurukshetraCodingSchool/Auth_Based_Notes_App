@@ -6,6 +6,7 @@ var logger = require('morgan');
 const passport = require("passport");
 const session = require("express-session");
 const User = require("./models/model");
+const upload = require('./utils/multer')
 
 
 var indexRouter = require('./routes/index');

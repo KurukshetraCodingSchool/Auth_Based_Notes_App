@@ -10,6 +10,10 @@ const appschema = new mongoose.Schema({
     email:String,
     DOB:Date,
     gender:String,
+    profileImage:{
+        type:String,
+        default:"default.png"
+    }
 })
 appschema.plugin(plm)
 module.exports=mongoose.model('appschema',appschema);

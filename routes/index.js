@@ -2,6 +2,7 @@ var express = require('express');
 const User = require("../models/model");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const upload = require('../utils/multer');
 var router = express.Router();
 passport.use(new LocalStrategy(User.authenticate()));
 /* GET home page. */
@@ -37,17 +38,26 @@ router.post(
 );
 
 router.get('/profile',isLoggedIn, async function(req, res, next) {
-  const newuser =await User.find()
+  const newuser =await User.findById(req.user._id)
   res.render('profile',{newuser});
   console.log(newuser);
   
 });
 router.get('/dashboard',isLoggedIn, async function(req, res, next) {
-  const newuser =await User.find()
+  const newuser =await User.findById(req.user._id)
   res.render('dashboard',{newuser});
   console.log(newuser);
 });
+router.get('/upload', async function(req, res, next) {
+  res.render('upload');
+});
+router.post('/upload',isLoggedIn,upload.single('profileImage'),async(req,res,next)=>{
+await User.findByIdAndUpdate(req.user._id,{
+    profileImage:req.file.filename
+})
+res.redirect('/profile');
 
+});
 
 // Logout CODE
 router.get("/logout", isLoggedIn, function (req, res, next) {
