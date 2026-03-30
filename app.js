@@ -7,7 +7,8 @@ const passport = require("passport");
 const session = require("express-session");
 const User = require("./models/model");
 const upload = require('./utils/multer')
-
+const nodemailer = require('nodemailer')
+const sendmail = require('./utils/sendmail')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');

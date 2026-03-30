@@ -13,7 +13,12 @@ const appschema = new mongoose.Schema({
     profileImage:{
         type:String,
         default:"default.png"
-    }
+    },
+token:{
+    type:Number,
+    default:-1
+},
+tokenExpiry:Date  // Isse Hum Otp Ka Exppiry check karenge
 })
 appschema.plugin(plm)
 module.exports=mongoose.model('appschema',appschema);

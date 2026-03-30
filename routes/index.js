@@ -3,6 +3,8 @@ const User = require("../models/model");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const upload = require('../utils/multer');
+const sendMail = require("../utils/sendmail")
+const bcrypt = require('bcrypt')
 var router = express.Router();
 passport.use(new LocalStrategy(User.authenticate()));
 /* GET home page. */
@@ -39,9 +41,7 @@ router.post(
 
 router.get('/profile',isLoggedIn, async function(req, res, next) {
   const newuser =await User.findById(req.user._id)
-  res.render('profile',{newuser});
-  console.log(newuser);
-  
+  res.render('profile',{newuser});  
 });
 router.get('/dashboard',isLoggedIn, async function(req, res, next) {
   const newuser =await User.findById(req.user._id)
@@ -56,8 +56,42 @@ await User.findByIdAndUpdate(req.user._id,{
     profileImage:req.file.filename
 })
 res.redirect('/profile');
-
 });
+
+router.get('/sendmail', async function(req, res, next) {
+  res.render('sendmail');
+});
+
+router.post('/sendmail', async function(req, res, next) {
+  const user = await User.findOne({email:req.body.email});
+  sendMail(user.email,user,res,req);
+  res.redirect('/changepassword');
+});
+
+router.get('/changepassword', async function(req, res, next) {
+  res.render('changepassword');
+});
+router.post('/changepassword', async function(req, res, next) {
+  const{email,token,newpassword} = req.body;
+    const user = await User.findOne({email});
+if(!user){
+  return res.send("User not found ❌");
+}
+if(user.tokenExpiry<Date.now()){
+return res.send("Otp Expired ❌")
+}
+if(user.token!=token){
+  return res.send("Invalid Otp❌❌❌")
+}
+user.token=null;
+user.tokenExpiry=null;
+await user.setPassword(newpassword);
+await user.save();
+// console.log(user.password);
+
+res.redirect('/signin')
+});
+
 
 // Logout CODE
 router.get("/logout", isLoggedIn, function (req, res, next) {

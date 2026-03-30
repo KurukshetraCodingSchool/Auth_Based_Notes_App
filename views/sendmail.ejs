@@ -1,0 +1,19 @@
+<%- include('partials/header') %>
+
+<div class="container">
+  <div class="card">
+    <h2>Forgot Password</h2>
+    <form action="/sendmail" method="post">
+      <div class="input-group">
+        <input type="email" name="email" required>
+        <label>email</label>
+      </div>
+      <button type="submit">Sendmail</button>
+
+      <p class="link">Back To Sign-In? <a href="/signin">Signin</a></p>
+    </form>
+  </div>
+</div>
+
+
+<%- include('partials/footer')%>
