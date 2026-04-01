@@ -21,6 +21,8 @@ router.post("/register", async function (req, res, next) {
             { username,email,DOB,gender},
             password
         );
+        req.flash('error_msg',"Not Signup ❌❌")
+        req.flash('success_msg',"Signup Successfully✅✅")
         res.redirect("/signin");
     } catch (error) {
         console.log(error);
@@ -30,14 +32,28 @@ router.post("/register", async function (req, res, next) {
 router.get('/signin', async function(req, res, next) {
   res.render('signin');
 });
-router.post(
-    "/signin",
-    passport.authenticate("local", {
-        successRedirect: "/profile",
-        failureRedirect: "/signin",
-    }),
-    function (req, res, next) {}
-);
+// router.post(
+//     "/signin",
+//     passport.authenticate("local", {
+//   successRedirect: "/profile",
+//   failureRedirect: "/signin",
+//   successFlash: "Signin Successfully ✅"
+// }),
+//     function (req, res, next) {}
+// );
+router.post("/signin", (req, res, next) => {
+  passport.authenticate("local", (err, user) => {
+    if (!user) {
+      req.flash("error_msg", "Invalid Credentials ❌");
+      return res.redirect("/signin");
+    }
+
+    req.logIn(user, () => {
+      req.flash("success_msg", "Signin Successfully ✅");
+      return res.redirect("/profile");
+    });
+  })(req, res, next);
+});
 
 router.get('/profile',isLoggedIn, async function(req, res, next) {
   const newuser =await User.findById(req.user._id)
@@ -55,6 +71,7 @@ router.post('/upload',isLoggedIn,upload.single('profileImage'),async(req,res,nex
 await User.findByIdAndUpdate(req.user._id,{
     profileImage:req.file.filename
 })
+        req.flash('success_msg',"ImageUploaded✅✅")
 res.redirect('/profile');
 });
 
@@ -65,6 +82,7 @@ router.get('/sendmail', async function(req, res, next) {
 router.post('/sendmail', async function(req, res, next) {
   const user = await User.findOne({email:req.body.email});
   sendMail(user.email,user,res,req);
+req.flash('success_msg',"OtpSent✅✅")
   res.redirect('/changepassword');
 });
 
@@ -88,10 +106,26 @@ user.tokenExpiry=null;
 await user.setPassword(newpassword);
 await user.save();
 // console.log(user.password);
-
+req.flash('success_msg',"PasswordChanged✅✅")
 res.redirect('/signin')
 });
+router.get('/reset', async function(req, res, next) {
+  res.render('resetpassword');
+});
 
+router.post('/reset', isLoggedIn ,async function(req, res, next) {
+   try {
+        await req.user.changePassword(
+            req.body.oldpassword,
+            req.body.newpassword
+        );
+        await req.user.save();
+        req.flash('success_msg',"PasswordChanged✅✅")
+        res.redirect("/profile");
+    } catch (error) {
+        res.send(error);
+    }
+});
 
 // Logout CODE
 router.get("/logout", isLoggedIn, function (req, res, next) {

@@ -1,0 +1,87 @@
+<% if (success_msg && success_msg.length > 0) { %>
+  <div class="toast toast-success">
+    <span><%= success_msg %></span>
+    <button class="close-btn">&times;</button>
+  </div>
+<% } %>
+
+<% if (error_msg && error_msg.length > 0) { %>
+  <div class="toast toast-error">
+    <span><%= error_msg %></span>
+    <button class="close-btn">&times;</button>
+  </div>
+<% } %>
+
+<script>
+  document.querySelectorAll('.toast').forEach(toast => {
+
+    // Show animation
+    setTimeout(() => {
+      toast.classList.add('show');
+    }, 100);
+
+    // Auto remove after 4 sec
+    setTimeout(() => {
+      removeToast(toast);
+    }, 4000);
+
+    // Manual close
+    toast.querySelector('.close-btn').addEventListener('click', () => {
+      removeToast(toast);
+    });
+  });
+
+  function removeToast(toast) {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      toast.remove();
+    }, 500);
+  }
+</script>
+
+
+<style>
+.toast {
+  position: fixed;
+  top: 20px;
+  right: -400px;   /* start outside */
+  min-width: 300px;
+  max-width: 4000px;
+  padding: 10px 5px;
+  border-radius: 10px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  z-index: 9999;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  transition: all 0.5s ease;
+  opacity: 0;
+}
+
+/* Show Animation */
+.toast.show {
+  right: 20px;
+  opacity: 1;
+}
+/* Success */
+.toast-success {
+  background: linear-gradient(135deg, #28a745, #218838);
+}
+
+/* Error */
+.toast-error {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+/* Close Button */
+.close-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+</style>

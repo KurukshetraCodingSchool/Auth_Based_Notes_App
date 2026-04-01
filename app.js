@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const passport = require("passport");
 const session = require("express-session");
+const flash = require('connect-flash')
 const User = require("./models/model");
 const upload = require('./utils/multer')
 const nodemailer = require('nodemailer')
@@ -23,13 +24,22 @@ app.use(
     session({
         saveUninitialized: true,
         resave: true,
-        secret: "asdhbcfkjf",
+        secret: "vikashbaghelpal",
     })
 );
 app.use(passport.initialize());
 app.use(passport.session());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+// For Flash message
+app.use(flash())
+// Middleware to pass flash messages to views
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  next();
+});
 
 app.use(logger('dev'));
 app.use(express.json());
