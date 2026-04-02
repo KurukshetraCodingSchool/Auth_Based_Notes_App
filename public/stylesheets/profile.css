@@ -24,3 +24,28 @@ h1{
     object-fit: cover;
     border: 2px solid black;
 }
+textarea{
+    width:90%;
+    height: 100px;
+    margin-top: 10px;
+    padding: 10px;
+}
+.note-card{
+    background: #f9f9f9;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 5px 10px #3e3e3e;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.note-card h3{
+    margin:0;
+    padding: 0;
+}
+.note-card a{
+    margin-top: 2vw;
+    color: red;
+    font-size: medium;
+}

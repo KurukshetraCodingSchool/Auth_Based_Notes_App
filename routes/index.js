@@ -1,5 +1,6 @@
 var express = require('express');
-const User = require("../models/model");
+const User = require("../models/user");
+const Note = require("../models/Notes");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const upload = require('../utils/multer');
@@ -21,7 +22,6 @@ router.post("/register", async function (req, res, next) {
             { username,email,DOB,gender},
             password
         );
-        req.flash('error_msg',"Not Signup ❌❌")
         req.flash('success_msg',"Signup Successfully✅✅")
         res.redirect("/signin");
     } catch (error) {
@@ -59,11 +59,7 @@ router.get('/profile',isLoggedIn, async function(req, res, next) {
   const newuser =await User.findById(req.user._id)
   res.render('profile',{newuser});  
 });
-router.get('/dashboard',isLoggedIn, async function(req, res, next) {
-  const newuser =await User.findById(req.user._id)
-  res.render('dashboard',{newuser});
-  console.log(newuser);
-});
+
 router.get('/upload', async function(req, res, next) {
   res.render('upload');
 });
@@ -126,13 +122,40 @@ router.post('/reset', isLoggedIn ,async function(req, res, next) {
         res.send(error);
     }
 });
-
 // Logout CODE
 router.get("/logout", isLoggedIn, function (req, res, next) {
     req.session.destroy(() => {
         res.redirect("/signin");
     });
 });
+
+// Notes Work 
+// Notes Ko Frotend Me bhejna or Db Me store Karna
+router.get('/dashboard',isLoggedIn, async function(req, res, next) {
+  const notes =await Note.find({user:req.user._id});
+  res.render('dashboard',{notes,User});
+});
+
+//add notes
+router.get('/addnote',isLoggedIn, async function(req, res, next) {
+  res.render('addnote');
+});
+
+router.post('/addnote',isLoggedIn, async function(req, res, next) {
+  const {title,content} = req.body;
+  await Note.create({
+    title,
+    content,
+    user:req.user._id
+  })
+  req.flash('success_msg',"NoteAdded✅✅")
+  res.redirect('/dashboard')
+});
+router.get('/delete/:id',isLoggedIn,async (req,res,next)=>{
+  await Note.findByIdAndDelete(req.params.id)
+  req.flash('success_msg',"NoteDeleted✅")
+  res.redirect("/dashboard")
+})
 // AUTHENTICATED ROUTE MIDDLEWARE
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {

@@ -1,0 +1,13 @@
+<%- include('partials/header') %>
+<%- include('partials/flash') %>
+<%- include('partials/nav') %>
+
+<div class="container">
+ <h1>Add Note</h1>
+ <form action="/addnote" method="post">
+<input type="text" name="title", placeholder="Title" required>
+<textarea rows="" cols="" name="content" placeholder="Write Your Note....." required></textarea>
+<button> add note</button>
+ </form>
+</div>
+<%- include('partials/footer')%>

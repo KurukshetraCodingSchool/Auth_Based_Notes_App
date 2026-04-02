@@ -5,11 +5,17 @@ mongoose.connect("mongodb://0.0.0.0/Note_App").then(()=>{
     console.log("Db Connected ✅😍");
 })
 
-const appschema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username:String,
     email:String,
     DOB:Date,
     gender:String,
+    Notes:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Note"
+        }
+    ],
     profileImage:{
         type:String,
         default:"default.png"
@@ -20,5 +26,5 @@ token:{
 },
 tokenExpiry:Date  // Isse Hum Otp Ka Exppiry check karenge
 })
-appschema.plugin(plm)
-module.exports=mongoose.model('appschema',appschema);
+userSchema.plugin(plm)
+module.exports= mongoose.model('user',userSchema);
