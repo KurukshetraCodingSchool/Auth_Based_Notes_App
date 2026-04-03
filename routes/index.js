@@ -156,6 +156,26 @@ router.get('/delete/:id',isLoggedIn,async (req,res,next)=>{
   req.flash('success_msg',"NoteDeleted✅")
   res.redirect("/dashboard")
 })
+
+router.get('/edit/:id',isLoggedIn,async (req,res,next)=>{
+  const note = await Note.findOne({
+    _id:req.params.id,
+    user:req.user._id
+  })
+  if(!note) return res.send("Note Not Found❌❌")
+  res.render("editnote",{note});
+})
+
+router.post('/edit/:id',isLoggedIn,async (req,res,next)=>{
+  const {title,content}= req.body;
+  await Note.findOneAndUpdate(
+    {_id:req.params.id,user:req.user._id},
+    {title,content}
+);
+  req.flash('success_msg',"NoteUpdated✅")
+  res.redirect("/dashboard");
+})
+
 // AUTHENTICATED ROUTE MIDDLEWARE
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {

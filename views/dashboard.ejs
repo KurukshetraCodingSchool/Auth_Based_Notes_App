@@ -13,7 +13,10 @@
 <div class="note-card">
     <h3><%= note.title %></h3>
     <p><%= note.content %></p>
+    <div class="edit">
+    <h4><a href="/edit/<%= note._id %> ">edit</a></h4>
     <a href="/delete/<%= note._id %> ">Delete</a>
+    </div>
 </div>
 <% }) %>
 </div>
