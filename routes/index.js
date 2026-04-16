@@ -177,17 +177,22 @@ router.post('/edit/:id',isLoggedIn,async (req,res,next)=>{
   req.flash('success_msg',"NoteUpdated✅")
   res.redirect("/dashboard");
 })
-router.get('/search',isLoggedIn,async (req,res,next)=>{
-  const query = req.query;
-  Note.find({
-    user:req.user._id,
-    $or:[
-         {title:{$regrex:query,$options:'i'}},
-         {content:{$regrex:query,$options:'i'}},
+router.get('/search', isLoggedIn, async (req, res) => {
+  const query = req.query.q;
+  if (!query) {
+    return res.redirect('/dashboard')
+  }
+  const notes = await Note.find({
+    user: req.user._id,
+    $or: [
+      { title: { $regex: query, $options: 'i' } },
+      { content: { $regex: query, $options: 'i' } }
     ]
-  })
-  res.send("success")
-})
+  });
+
+  const newuser = await User.findById(req.user._id);
+  res.render('dashboard', { notes, newuser }); 
+});
 
 // AUTHENTICATED ROUTE MIDDLEWARE
 function isLoggedIn(req, res, next) {
