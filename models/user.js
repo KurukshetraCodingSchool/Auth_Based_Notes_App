@@ -26,5 +26,5 @@ token:{
 },
 tokenExpiry:Date  // Isse Hum Otp Ka Exppiry check karenge
 })
-userSchema.plugin(plm)
+userSchema.plugin(plm, {usernameField: 'email'})
 module.exports= mongoose.model('user',userSchema);

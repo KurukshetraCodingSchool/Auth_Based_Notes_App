@@ -7,7 +7,8 @@ const upload = require('../utils/multer');
 const sendMail = require("../utils/sendmail")
 const bcrypt = require('bcrypt')
 var router = express.Router();
-passport.use(new LocalStrategy(User.authenticate()));
+// passport.use(new LocalStrategy(User.authenticate()));
+passport.use(User.createStrategy());
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   res.render('index');
@@ -133,7 +134,8 @@ router.get("/logout", isLoggedIn, function (req, res, next) {
 // Notes Ko Frotend Me bhejna or Db Me store Karna
 router.get('/dashboard',isLoggedIn, async function(req, res, next) {
   const notes =await Note.find({user:req.user._id});
-  res.render('dashboard',{notes,User});
+  const newuser =await User.findById(req.user._id)
+  res.render('dashboard',{notes,newuser});
 });
 
 //add notes
@@ -174,6 +176,17 @@ router.post('/edit/:id',isLoggedIn,async (req,res,next)=>{
 );
   req.flash('success_msg',"NoteUpdated✅")
   res.redirect("/dashboard");
+})
+router.get('/search',isLoggedIn,async (req,res,next)=>{
+  const query = req.query;
+  Note.find({
+    user:req.user._id,
+    $or:[
+         {title:{$regrex:query,$options:'i'}},
+         {content:{$regrex:query,$options:'i'}},
+    ]
+  })
+  res.send("success")
 })
 
 // AUTHENTICATED ROUTE MIDDLEWARE
